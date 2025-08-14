@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
   return (
     <div className="min-h-screen flex">
       <section className="w-1/2 bg-white flex flex-col">
@@ -36,6 +38,7 @@ export default function Home() {
               </div>
               <button
                 type="button"
+                onClick={() => router.push("/home")}
                 className="w-full bg-gray-700 text-white rounded-md py-2"
               >
                 Entrar
