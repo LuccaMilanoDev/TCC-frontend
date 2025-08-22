@@ -4,28 +4,69 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
 import products from "@/app/mock-data.json";
+import Protected from "@/components/Protected";
+import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function HomePage() {
+  type Product = { nome: string; valor: number };
+  const [sort, setSort] = useState<
+    "name_asc" | "name_desc" | "price_asc" | "price_desc"
+  >("name_asc");
+  const searchParams = useSearchParams();
+  const query = searchParams.get("q")?.toLowerCase().trim() || "";
+
+  const filtered = useMemo(() => {
+    let list = (products as Product[]).filter((p) =>
+      p.nome.toLowerCase().includes(query)
+    );
+    switch (sort) {
+      case "name_asc":
+        list = [...list].sort((a, b) => a.nome.localeCompare(b.nome));
+        break;
+      case "name_desc":
+        list = [...list].sort((a, b) => b.nome.localeCompare(a.nome));
+        break;
+      case "price_asc":
+        list = [...list].sort((a, b) => a.valor - b.valor);
+        break;
+      case "price_desc":
+        list = [...list].sort((a, b) => b.valor - a.valor);
+        break;
+    }
+    return list;
+  }, [query, sort]);
+
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-r from-black via-zinc-800 to-zinc-400">
-      <Header />
+    <Protected>
+      <div className="min-h-screen flex flex-col bg-gradient-to-r from-black via-zinc-800 to-zinc-400">
+        <Header />
 
-      <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-white/90 text-lg font-medium">Selecionar Produtos:</h2>
-            <div>
-              <button className="inline-flex items-center gap-2 bg-white text-gray-800 px-3 py-2 rounded-md text-sm">
-                Nome A-Z <span>▾</span>
-              </button>
+        <main className="flex-1">
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
+              <h2 className="text-white/90 text-lg font-medium">Selecionar Produtos:</h2>
+              <div className="flex gap-2">
+                <select
+                  aria-label="Ordenação"
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value as any)}
+                  className="bg-white text-gray-800 px-3 py-2 rounded-md text-sm"
+                >
+                  <option value="name_asc">Nome A-Z</option>
+                  <option value="name_desc">Nome Z-A</option>
+                  <option value="price_asc">Preço crescente</option>
+                  <option value="price_desc">Preço decrescente</option>
+                </select>
+              </div>
             </div>
+
+            <ProductGrid products={filtered} />
           </div>
+        </main>
 
-          <ProductGrid products={products} />
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </Protected>
   );
 }

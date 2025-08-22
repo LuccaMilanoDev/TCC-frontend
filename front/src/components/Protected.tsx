@@ -4,14 +4,16 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
-export default function IndexRedirect() {
-  const router = useRouter();
+export default function Protected({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    if (isAuthenticated) router.replace("/home");
-    else router.replace("/login");
+    if (!isAuthenticated) {
+      router.replace("/login");
+    }
   }, [isAuthenticated, router]);
 
-  return null;
+  if (!isAuthenticated) return null;
+  return <>{children}</>;
 }
