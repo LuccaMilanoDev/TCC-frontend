@@ -5,14 +5,13 @@ import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
 import products from "@/app/mock-data.json";
 import Protected from "@/components/Protected";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ChangeEvent } from "react";
 import { useSearchParams } from "next/navigation";
 
 export default function HomePage() {
   type Product = { nome: string; valor: number };
-  const [sort, setSort] = useState<
-    "name_asc" | "name_desc" | "price_asc" | "price_desc"
-  >("name_asc");
+  type Sort = "name_asc" | "name_desc" | "price_asc" | "price_desc";
+  const [sort, setSort] = useState<Sort>("name_asc");
   const searchParams = useSearchParams();
   const query = searchParams.get("q")?.toLowerCase().trim() || "";
 
@@ -50,7 +49,9 @@ export default function HomePage() {
                 <select
                   aria-label="Ordenação"
                   value={sort}
-                  onChange={(e) => setSort(e.target.value as any)}
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                    setSort(e.target.value as Sort)
+                  }
                   className="bg-white text-gray-800 px-3 py-2 rounded-md text-sm"
                 >
                   <option value="name_asc">Nome A-Z</option>
