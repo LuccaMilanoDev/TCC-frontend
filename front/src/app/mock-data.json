@@ -1,27 +1,27 @@
 [
-    {
-      "nome": "Apple iPhone 14 Pro 512GB Gold",
-      "valor": 1437
-    },
-    {
-      "nome": "Apple iPhone 11 128GB White",
-      "valor": 510
-    },
-    {
-      "nome": "Apple iPhone 14 Pro 128GB Deep Purple",
-      "valor": 1600
-    },
-    {
-      "nome": "Apple iPhone 17 Pro 456GB Black",
-      "valor": 2000
-    }, 
-    {
-      "nome": "Apple iPhone 18 Pro 512GB Black",
-      "valor": 3500
-    }, 
-    {
-      "nome": "Apple iPhone 19 Pro 356GB Black",
-      "valor": 6000
-    }
-  ]
-  
+  {
+    "nome": "iPhone",
+    "valor": 600,
+    "imagem": "/iphone.png"
+  },
+  {
+    "nome": "Mochila",
+    "valor": 120,
+    "imagem": "/mochila.png"
+  },
+  {
+    "nome": "Relógio",
+    "valor": 200,
+    "imagem": "/relogio.png"
+  },
+  {
+    "nome": "Camisa",
+    "valor": 80,
+    "imagem": "/camisa.png"
+  },
+  {
+    "nome": "Casaco",
+    "valor": 150,
+    "imagem": "/casaco.png"
+  }
+]

@@ -72,9 +72,6 @@ export default function LoginPage() {
               >
                 Entrar
               </button>
-              <div className="text-xs text-gray-600">
-                Dica: usuário <code>standard_user</code> / senha <code>password</code>
-              </div>
             </form>
           </div>
         </div>
@@ -84,14 +81,14 @@ export default function LoginPage() {
           <h2 className="text-5xl font-semibold text-gray-700 mb-8 text-center">Logins</h2>
           <div className="space-y-4">
             <div className="bg-white border border-gray-300 rounded-md p-4">
-              <h3 className="text-gray-800 font-semibold mb-2 text-sm uppercase tracking-wide">Accepted usernames are:</h3>
+              <h3 className="text-gray-800 font-semibold mb-2 text-sm uppercase tracking-wide">Usuarios aceitos:</h3>
               <ul className="text-gray-700 text-sm space-y-1 list-disc pl-5">
                 <li><code className="px-1 bg-gray-100 rounded">standard_user</code></li>
                 
               </ul>
             </div>
             <div className="bg-white border border-gray-300 rounded-md p-4">
-              <h3 className="text-gray-800 font-semibold mb-2 text-sm uppercase tracking-wide">Password for all users:</h3>
+              <h3 className="text-gray-800 font-semibold mb-2 text-sm uppercase tracking-wide">Senha para todos os usuarios:</h3>
               <p className="text-gray-700 text-sm"><code className="px-1 bg-gray-100 rounded">password</code></p>
             </div>
           </div>

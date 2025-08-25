@@ -9,7 +9,7 @@ import { useMemo, useState, type ChangeEvent } from "react";
 import { useSearchParams } from "next/navigation";
 
 export default function HomePage() {
-  type Product = { nome: string; valor: number };
+  type Product = { nome: string; valor: number; imagem: string };
   type Sort = "name_asc" | "name_desc" | "price_asc" | "price_desc";
   const [sort, setSort] = useState<Sort>("name_asc");
   const searchParams = useSearchParams();

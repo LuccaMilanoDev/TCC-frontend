@@ -3,6 +3,7 @@ import ProductCard from "@/components/ProductCard";
 type Product = {
   nome: string;
   valor: number;
+  imagem: string;
 };
 
 export default function ProductGrid({ products }: { products: Product[] }) {
