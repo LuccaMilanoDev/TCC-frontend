@@ -2,7 +2,7 @@
 
 import { addToCart } from "@/lib/cart";
 import Image from "next/image";
-
+import { isProblemUser } from "@/lib/flags";
 type Product = {
   nome: string;
   valor: number;
@@ -10,9 +10,11 @@ type Product = {
 };
 
 export default function ProductCard({ product }: { product: Product }) {
+  const problem = isProblemUser();
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 flex flex-col gap-4">
       <div className="w-full aspect-[4/3] bg-gray-100 rounded-lg relative overflow-hidden">
+      {!problem ? (
         <Image
           src={product.imagem}
           alt={product.nome}
@@ -21,6 +23,7 @@ export default function ProductCard({ product }: { product: Product }) {
           className="object-contain"
           priority={false}
         />
+      ): null}`
       </div>
       <div className="flex-1">
         <h3 className="text-sm font-medium text-gray-800 leading-snug">

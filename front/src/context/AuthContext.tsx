@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { setProblemUser } from "@/lib/flags";
 
 export type AuthContextType = {
   isAuthenticated: boolean;
@@ -25,10 +26,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = useCallback(async (username: string, password: string) => {
-    if (username === "standard_user" && password === "password") {
-      setIsAuthenticated(true);
-      try { localStorage.setItem(AUTH_KEY, "true"); } catch {}
-      return { ok: true as const };
+    if (password === "password") {
+      if (username === "standard_user") {
+        setIsAuthenticated(true);
+        try { localStorage.setItem(AUTH_KEY, "true"); } catch {}
+        try { setProblemUser(false); } catch {}
+        return { ok: true as const };
+      }
+      if (username === "problem_user") {
+        setIsAuthenticated(true);
+        try { localStorage.setItem(AUTH_KEY, "true"); } catch {}
+        try { setProblemUser(true); } catch {}
+        return { ok: true as const };
+      }
     }
     return { ok: false as const, error: "Credenciais inválidas" };
   }, []);
@@ -36,6 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(() => {
     setIsAuthenticated(false);
     try { localStorage.removeItem(AUTH_KEY); } catch {}
+    try { setProblemUser(false); } catch {}
   }, []);
 
   const value = useMemo(() => ({ isAuthenticated, login, logout }), [isAuthenticated, login, logout]);

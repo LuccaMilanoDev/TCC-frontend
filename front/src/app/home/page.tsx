@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
 import products from "@/app/mock-data.json";
 import Protected from "@/components/Protected";
+import { isProblemUser } from "@/lib/flags";
 import { useMemo, useState, type ChangeEvent } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -19,6 +20,7 @@ export default function HomePage() {
     let list = (products as Product[]).filter((p) =>
       p.nome.toLowerCase().includes(query)
     );
+    const problem = isProblemUser();
     switch (sort) {
       case "name_asc":
         list = [...list].sort((a, b) => a.nome.localeCompare(b.nome));
@@ -27,10 +29,10 @@ export default function HomePage() {
         list = [...list].sort((a, b) => b.nome.localeCompare(a.nome));
         break;
       case "price_asc":
-        list = [...list].sort((a, b) => a.valor - b.valor);
+        list = [...list].sort((a, b) => (problem ? b.valor - a.valor : a.valor - b.valor));
         break;
       case "price_desc":
-        list = [...list].sort((a, b) => b.valor - a.valor);
+        list = [...list].sort((a, b) => (problem ? a.valor - b.valor : b.valor - a.valor));
         break;
     }
     return list;

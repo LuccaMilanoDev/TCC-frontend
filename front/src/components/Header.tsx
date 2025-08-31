@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { isProblemUser } from "@/lib/flags";
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
@@ -32,7 +33,7 @@ export default function Header() {
   const onSearchChange = (value: string) => {
     setSearch(value);
     // Atualiza apenas quando estiver na /home
-    if (pathname === "/home") {
+    if (pathname === "/home" && !isProblemUser()) {
       router.replace(makeUrl(value));
     }
   };
@@ -72,11 +73,11 @@ export default function Header() {
 
         <nav className="flex items-center gap-2">
           <NavLink href="/home" label="Inicio" />
-          <NavLink href="/about" label="Sobre" />
+          <NavLink href={isProblemUser() ? "/cart" : "/about"} label="Sobre" />
           <NavLink href="#" label="Contato" />
 
           <Link
-            href="/cart"
+            href={isProblemUser() ? "/about" : "/cart"}
             aria-label="Cart"
             className={`ml-2 p-2 rounded transition-colors ${
               pathname.startsWith("/cart") ? "bg-gray-200" : "hover:bg-gray-300"
