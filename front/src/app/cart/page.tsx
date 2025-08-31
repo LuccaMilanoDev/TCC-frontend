@@ -4,9 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CartItem, getCart, updateQty, removeFromCart } from "@/lib/cart";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
   const [items, setItems] = useState<CartItem[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     setItems(getCart());
@@ -122,7 +124,20 @@ export default function CartPage() {
                   <div className="h-px bg-gray-200 my-2" />
                   <Row label="Total" value={`$${(subtotal + 50 + 29).toFixed(2)}`} strong />
                 </div>
-                <button className="w-full mt-4 bg-black text-white rounded-md py-3">Checkout</button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (items.length === 0) {
+                      alert("Seu carrinho está vazio. Adicione itens antes de finalizar a compra.");
+                      return;
+                    }
+                    router.push("/success");
+                  }}
+                  aria-label="Finalizar compra"
+                  className="w-full mt-4 bg-black text-white rounded-md py-3 cursor-pointer"
+                >
+                  Finalizar compra
+                </button>
               </div>
             </div>
           </aside>
