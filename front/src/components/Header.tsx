@@ -79,7 +79,7 @@ export default function Header() {
             href="/cart"
             aria-label="Cart"
             className={`ml-2 p-2 rounded transition-colors ${
-              pathname.startsWith("/cart") ? "bg-gray-200" : "hover:bg-gray-100"
+              pathname.startsWith("/cart") ? "bg-gray-200" : "hover:bg-gray-300"
             }`}
           >
             🛒
@@ -87,7 +87,7 @@ export default function Header() {
           <div className="relative">
             <button
               aria-label="Profile"
-              className="p-2 rounded hover:bg-gray-100"
+              className="p-2 rounded hover:bg-gray-300 cursor-pointer"
               onClick={() => setShowMenu((v) => !v)}
             >
               👤
@@ -95,7 +95,7 @@ export default function Header() {
             {showMenu && (
               <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-md py-2 z-50">
                 <button
-                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-300 cursor-pointer text-black"
                   onClick={() => {
                     setShowMenu(false);
                     logout();

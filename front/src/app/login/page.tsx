@@ -57,7 +57,7 @@ export default function LoginPage() {
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
                   aria-label="Alternar visibilidade da senha"
-                  className="absolute inset-y-0 right-3 flex items-center text-gray-700"
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-700 cursor-pointer"
                 >
                   {showPassword ? "🙈" : "👁️"}
                 </button>
@@ -67,7 +67,7 @@ export default function LoginPage() {
               )}
               <button
                 type="submit"
-                className="w-full bg-gray-700 text-white rounded-md py-2"
+                className="w-full bg-gray-700 text-white rounded-md py-2 cursor-pointer hover:bg-gray-300 hover:text-black"
                 disabled={!username || !password}
               >
                 Entrar

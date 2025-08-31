@@ -32,7 +32,7 @@ export default function ProductCard({ product }: { product: Product }) {
           ${product.valor}
         </span>
         <button
-          className="px-4 py-2 bg-black text-white rounded-md text-sm hover:bg-gray-200 hover:text-black transition-colors duration-200"
+          className="px-4 py-2 bg-black text-white rounded-md text-sm hover:bg-gray-200 hover:text-black transition-colors duration-200 cursor-pointer"
           onClick={() => addToCart({ nome: product.nome, valor: product.valor })}
         >
           Adicionar ao carrinho

@@ -52,7 +52,7 @@ export default function HomePage() {
                   onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                     setSort(e.target.value as Sort)
                   }
-                  className="bg-white text-gray-800 px-3 py-2 rounded-md text-sm"
+                  className="bg-white text-gray-800 px-3 py-2 rounded-md text-sm cursor-pointer hover:bg-gray-300"
                 >
                   <option value="name_asc">Nome A-Z</option>
                   <option value="name_desc">Nome Z-A</option>

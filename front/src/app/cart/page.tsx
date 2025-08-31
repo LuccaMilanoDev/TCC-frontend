@@ -58,12 +58,15 @@ export default function CartPage() {
               <ul className="bg-white border border-gray-200 rounded-lg divide-y">
                 {items.map((i) => (
                   <li key={i.nome} className="p-5 flex items-center gap-4">
-                    <div className="w-16 h-16 rounded bg-gray-100 grid place-items-center text-gray-400 text-xs">
-                      Img
+                    <div className="w-16 h-16 rounded bg-gray-100 flex items-center justify-center">
+                      <img 
+                        src={getProductImage(i.nome)} 
+                        alt={i.nome}
+                        className="max-w-full max-h-full object-contain"
+                      />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-gray-900">{i.nome}</p>
-                      <p className="text-xs text-gray-500">#000000</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <button
@@ -73,7 +76,7 @@ export default function CartPage() {
                       >
                         –
                       </button>
-                      <span className="w-8 text-center">{i.qty}</span>
+                      <span className="w-8 text-center text-black font-medium">{i.qty}</span>
                       <button
                         onClick={() => onInc(i.nome)}
                         className="w-8 h-8 grid place-items-center rounded border border-gray-300 text-gray-700"
@@ -82,7 +85,7 @@ export default function CartPage() {
                         +
                       </button>
                     </div>
-                    <div className="w-24 text-right font-semibold">${subtotalItem(i)}</div>
+                    <div className="w-24 text-right font-semibold text-black">${subtotalItem(i)}</div>
                     <button
                       onClick={() => onRemove(i.nome)}
                       className="ml-4 text-gray-400 hover:text-gray-600"
@@ -142,4 +145,23 @@ function Row({ label, value, strong }: { label: string; value: string; strong?: 
 
 function subtotalItem(i: CartItem) {
   return (i.valor * i.qty).toFixed(2);
+}
+
+function getProductImage(productName: string): string {
+  // Map product names to their corresponding images
+  const imageMap: { [key: string]: string } = {
+    'Camisa': '/camisa.png',
+    'Casaco': '/casaco.png',
+    'Mochila': '/mochila.png',
+    'Relógio': '/relogio.png',
+    'iPhone': '/iphone.png',
+  };
+  
+  // Find matching product (case insensitive partial match)
+  const foundKey = Object.keys(imageMap).find(key => 
+    productName.toLowerCase().includes(key.toLowerCase()) || 
+    key.toLowerCase().includes(productName.toLowerCase())
+  );
+  
+  return foundKey ? imageMap[foundKey] : '/camisa.png'; // Default fallback
 }
