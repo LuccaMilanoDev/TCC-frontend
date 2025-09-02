@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { isProblemUser } from "@/lib/flags";
-import { useEffect, useMemo, useState } from "react";
+import { isProblemUser, isPerformanceUser } from "@/lib/flags";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Header() {
@@ -16,6 +16,9 @@ export default function Header() {
   const [showMenu, setShowMenu] = useState(false);
   const q = searchParams.get("q") ?? "";
   const [search, setSearch] = useState(q);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const clickCountRef = useRef(0);
+  const performance = isPerformanceUser();
 
   useEffect(() => {
     setSearch(q);
@@ -32,7 +35,30 @@ export default function Header() {
 
   const onSearchChange = (value: string) => {
     setSearch(value);
-    // Atualiza apenas quando estiver na /home
+    
+    // Performance problem: Simulate rapid clicks and delayed search for performance_user
+    if (performance) {
+      clickCountRef.current++;
+      
+      // Clear existing timeout
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+      
+      // Simulate performance issue with artificial delay (debounce with long delay)
+      searchTimeoutRef.current = setTimeout(() => {
+        if (pathname === "/home") {
+          // Add extra delay to simulate slow search
+          setTimeout(() => {
+            router.replace(makeUrl(value));
+          }, 300 + Math.random() * 700); // Random delay 300-1000ms
+        }
+      }, 800); // Long debounce delay
+      
+      return;
+    }
+    
+    // Normal behavior for other users
     if (pathname === "/home" && !isProblemUser()) {
       router.replace(makeUrl(value));
     }

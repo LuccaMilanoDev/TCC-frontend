@@ -5,18 +5,29 @@ import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
 import products from "@/app/mock-data.json";
 import Protected from "@/components/Protected";
-import { isProblemUser } from "@/lib/flags";
-import { useMemo, useState, type ChangeEvent } from "react";
+import { isProblemUser, isPerformanceUser } from "@/lib/flags";
+import { useMemo, useState, useEffect, type ChangeEvent } from "react";
 import { useSearchParams } from "next/navigation";
 
 export default function HomePage() {
   type Product = { nome: string; valor: number; imagem: string };
   type Sort = "name_asc" | "name_desc" | "price_asc" | "price_desc";
   const [sort, setSort] = useState<Sort>("name_asc");
+  const [isFiltering, setIsFiltering] = useState(false);
   const searchParams = useSearchParams();
   const query = searchParams.get("q")?.toLowerCase().trim() || "";
+  const performance = isPerformanceUser();
 
   const filtered = useMemo(() => {
+    // Performance problem: Add artificial delay for performance_user
+    if (performance) {
+      setIsFiltering(true);
+      // Simulate heavy filtering operation with delay
+      setTimeout(() => {
+        setIsFiltering(false);
+      }, 1000 + Math.random() * 1500); // Random delay 1-2.5 seconds
+    }
+
     let list = (products as Product[]).filter((p) =>
       p.nome.toLowerCase().includes(query)
     );
@@ -36,7 +47,24 @@ export default function HomePage() {
         break;
     }
     return list;
-  }, [query, sort]);
+  }, [query, sort, performance]);
+
+  // Performance problem: Simulate scroll events for performance testing
+  useEffect(() => {
+    if (!performance) return;
+    
+    let scrollCount = 0;
+    const handleScroll = () => {
+      scrollCount++;
+      if (scrollCount > 100) {
+        // Simulate performance degradation after many scroll events
+        document.body.style.transition = "all 0.5s ease";
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [performance]);
 
   return (
     <Protected>
@@ -46,7 +74,12 @@ export default function HomePage() {
         <main className="flex-1">
           <div className="max-w-7xl mx-auto px-6 py-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
-              <h2 className="text-white/90 text-lg font-medium">Selecionar Produtos:</h2>
+              <h2 className="text-white/90 text-lg font-medium">
+                Selecionar Produtos:
+                {performance && isFiltering && (
+                  <span className="ml-2 text-yellow-400 text-sm">(Processando filtros...)</span>
+                )}
+              </h2>
               <div className="flex gap-2">
                 <select
                   aria-label="Ordenação"
@@ -55,6 +88,7 @@ export default function HomePage() {
                     setSort(e.target.value as Sort)
                   }
                   className="bg-white text-gray-800 px-3 py-2 rounded-md text-sm cursor-pointer hover:bg-gray-300"
+                  disabled={performance && isFiltering}
                 >
                   <option value="name_asc">Nome A-Z</option>
                   <option value="name_desc">Nome Z-A</option>
@@ -64,7 +98,13 @@ export default function HomePage() {
               </div>
             </div>
 
-            <ProductGrid products={filtered} />
+            {performance && isFiltering ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="text-white/70 text-lg">Carregando produtos...</div>
+              </div>
+            ) : (
+              <ProductGrid products={filtered} />
+            )}
           </div>
         </main>
 

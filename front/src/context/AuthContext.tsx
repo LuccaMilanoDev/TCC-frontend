@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { setProblemUser } from "@/lib/flags";
+import { setProblemUser, setPerformanceUser } from "@/lib/flags";
 
 export type AuthContextType = {
   isAuthenticated: boolean;
@@ -31,12 +31,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(true);
         try { localStorage.setItem(AUTH_KEY, "true"); } catch {}
         try { setProblemUser(false); } catch {}
+        try { setPerformanceUser(false); } catch {}
         return { ok: true as const };
       }
       if (username === "problem_user") {
         setIsAuthenticated(true);
         try { localStorage.setItem(AUTH_KEY, "true"); } catch {}
         try { setProblemUser(true); } catch {}
+        try { setPerformanceUser(false); } catch {}
+        return { ok: true as const };
+      }
+      if (username === "performance_user") {
+        setIsAuthenticated(true);
+        try { localStorage.setItem(AUTH_KEY, "true"); } catch {}
+        try { setProblemUser(false); } catch {}
+        try { setPerformanceUser(true); } catch {}
         return { ok: true as const };
       }
     }
@@ -47,6 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated(false);
     try { localStorage.removeItem(AUTH_KEY); } catch {}
     try { setProblemUser(false); } catch {}
+    try { setPerformanceUser(false); } catch {}
   }, []);
 
   const value = useMemo(() => ({ isAuthenticated, login, logout }), [isAuthenticated, login, logout]);

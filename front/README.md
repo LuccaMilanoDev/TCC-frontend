@@ -24,11 +24,12 @@ Você pode começar a editar a página modificando `app/home/page.tsx`. A págin
 
 - Usuario padrão (funcional): `standard_user`
 - Usuario com bugs (problem): `problem_user`
-- Senha (para ambos): `password`
+- Usuario com problemas de performance: `performance_user`
+- Senha (para todos): `password`
 
 Login implementado em `src/context/AuthContext.tsx`. Ao entrar com o usuario determinado, a flag de problema é ativada; ao deslogar, é desativada.
 
-Implementação da flag: `src/lib/flags.ts` (`isProblemUser`, `setProblemUser`).
+Implementação das flags: `src/lib/flags.ts` (`isProblemUser`, `setProblemUser`, `isPerformanceUser`, `setPerformanceUser`).
 
 ## standard_user — fluxo limpo (sem bugs)
 
@@ -48,3 +49,16 @@ Quando a flag de problem user está ativa, os seguintes comportamentos são alte
   - Origem: `src/components/Header.tsx` (links condicionais pela flag).
 - Ordenação por preço invertida: selecionar “crescente” aplica decrescente e vice-versa.
   - Origem: `src/app/home/page.tsx` (comparadores invertidos quando `isProblemUser()`).
+
+## performance_user — problemas de performance intencionais
+
+Quando a flag de performance user está ativa, os seguintes comportamentos são alterados para simular problemas de performance:
+
+- Carregamento tardio das imagens dos produtos com delay artificial de 1-3 segundos.
+  - Origem: `src/components/ProductCard.tsx` (delay simulado com `setTimeout` e loading lazy quando `isPerformanceUser()`).
+- Busca com delay excessivo e debounce longo (800ms + delay adicional de 300-1000ms).
+  - Origem: `src/components/Header.tsx` (timeout prolongado e delays artificiais quando `isPerformanceUser()`).
+- Filtros com processamento lento artificial de 1-2.5 segundos, interface bloqueada durante o processo.
+  - Origem: `src/app/home/page.tsx` (delay simulado no `useMemo` e estado de loading quando `isPerformanceUser()`).
+- Scroll com degradação progressiva da performance após 100+ eventos de scroll.
+  - Origem: `src/app/home/page.tsx` (listener de scroll que adiciona transições CSS pesadas quando `isPerformanceUser()`).

@@ -85,6 +85,7 @@ export default function LoginPage() {
               <ul className="text-gray-700 text-sm space-y-1 list-disc pl-5">
                 <li><code className="px-1 bg-gray-100 rounded">standard_user</code></li>
                 <li><code className="px-1 bg-gray-100 rounded">problem_user</code></li>
+                <li><code className="px-1 bg-gray-100 rounded">performance_user</code></li>
               </ul>
             </div>
             <div className="bg-white border border-gray-300 rounded-md p-4">

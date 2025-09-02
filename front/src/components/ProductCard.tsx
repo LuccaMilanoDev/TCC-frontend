@@ -2,7 +2,8 @@
 
 import { addToCart } from "@/lib/cart";
 import Image from "next/image";
-import { isProblemUser } from "@/lib/flags";
+import { isProblemUser, isPerformanceUser } from "@/lib/flags";
+import { useEffect, useState } from "react";
 type Product = {
   nome: string;
   valor: number;
@@ -11,19 +12,42 @@ type Product = {
 
 export default function ProductCard({ product }: { product: Product }) {
   const problem = isProblemUser();
+  const performance = isPerformanceUser();
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Performance problem: Delay image loading artificially for performance_user
+  useEffect(() => {
+    if (performance) {
+      // Simulate late lazy loading with artificial delay
+      const timer = setTimeout(() => {
+        setImageLoaded(true);
+      }, Math.random() * 2000 + 1000); // Random delay between 1-3 seconds
+      return () => clearTimeout(timer);
+    } else {
+      setImageLoaded(true);
+    }
+  }, [performance]);
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 flex flex-col gap-4">
       <div className="w-full aspect-[4/3] bg-gray-100 rounded-lg relative overflow-hidden">
       {!problem ? (
-        <Image
-          src={product.imagem}
-          alt={product.nome}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-contain"
-          priority={false}
-        />
-      ): null}`
+        performance && !imageLoaded ? (
+          <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+            Carregando...
+          </div>
+        ) : (
+          <Image
+            src={product.imagem}
+            alt={product.nome}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-contain"
+            priority={!performance} // Disable priority for performance_user
+            loading={performance ? "lazy" : "eager"}
+          />
+        )
+      ): null}
       </div>
       <div className="flex-1">
         <h3 className="text-sm font-medium text-gray-800 leading-snug">
