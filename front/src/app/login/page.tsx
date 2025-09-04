@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
+import Loading from "@/components/Loading";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { isAuthenticated, login } = useAuth();
   const router = useRouter();
 
@@ -20,16 +22,22 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    const res = await login(username.trim(), password);
-    if (res.ok) {
-      router.replace("/home");
-    } else {
-      setError(res.error);
+    setLoading(true);
+    try {
+      const res = await login(username.trim(), password);
+      if (res.ok) {
+        router.replace("/home");
+      } else {
+        setError(res.error);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex">
+      {loading && <Loading text="Entrando..." />}
       <section className="w-full md:w-1/2 bg-white flex flex-col">
         <div className="p-8">
           <Image src="/Logo (3).png" alt="Logo" width={120} height={120} priority />
@@ -43,7 +51,8 @@ export default function LoginPage() {
                 placeholder="Usuário"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-gray-400 text-black placeholder:text-gray bg-white caret-black"
+                disabled={loading}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-gray-400 text-black placeholder:text-gray bg-white caret-black disabled:opacity-60"
               />
               <div className="relative">
                 <input
@@ -51,14 +60,15 @@ export default function LoginPage() {
                   placeholder="Senha"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 outline-none focus:ring-2 focus:ring-gray-400 text-black placeholder:text-gray bg-white caret-black"
+                  disabled={loading}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 outline-none focus:ring-2 focus:ring-gray-400 text-black placeholder:text-gray bg-white caret-black disabled:opacity-60"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
                   aria-label="Alternar visibilidade da senha"
                   className="absolute inset-y-0 right-3 flex items-center text-gray-700 cursor-pointer"
-                >
+                  >
                   {showPassword ? "🙈" : "👁️"}
                 </button>
               </div>
@@ -67,10 +77,10 @@ export default function LoginPage() {
               )}
               <button
                 type="submit"
-                className="w-full bg-gray-700 text-white rounded-md py-2 cursor-pointer hover:bg-gray-300 hover:text-black"
-                disabled={!username || !password}
+                className="w-full bg-gray-700 text-white rounded-md py-2 cursor-pointer hover:bg-gray-300 hover:text-black disabled:opacity-60"
+                disabled={!username || !password || loading}
               >
-                Entrar
+                {loading ? "Entrando..." : "Entrar"}
               </button>
             </form>
           </div>

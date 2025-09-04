@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { isProblemUser, isPerformanceUser } from "@/lib/flags";
+import { getCartCount } from "@/lib/cart";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 
@@ -19,10 +20,30 @@ export default function Header() {
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const clickCountRef = useRef(0);
   const performance = isPerformanceUser();
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     setSearch(q);
   }, [q]);
+
+  useEffect(() => {
+    // Initialize cart count on mount
+    setCartCount(getCartCount());
+    // Listen for cart updates
+    const onUpdate = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { count?: number } | undefined;
+      if (detail && typeof detail.count === "number") {
+        setCartCount(detail.count);
+      } else {
+        // Fallback in case no detail
+        setCartCount(getCartCount());
+      }
+    };
+    window.addEventListener("cart:updated", onUpdate as EventListener);
+    return () => {
+      window.removeEventListener("cart:updated", onUpdate as EventListener);
+    };
+  }, []);
 
   const makeUrl = useMemo(() => {
     return (nextQ: string) => {
@@ -105,11 +126,19 @@ export default function Header() {
           <Link
             href={isProblemUser() ? "/about" : "/cart"}
             aria-label="Cart"
-            className={`ml-2 p-2 rounded transition-colors ${
-              pathname.startsWith("/cart") ? "bg-gray-200" : "hover:bg-gray-300"
+            className={`relative ml-2 p-2 rounded transition-colors ${
+              pathname.startsWith("/cart") ? "bg-gray-300" : "hover:bg-gray-300"
             }`}
           >
             🛒
+            {cartCount > 0 && (
+              <span
+                aria-label="Itens no carrinho"
+                className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-red-600 text-white text-[10px] leading-[18px] text-center font-semibold"
+              >
+                {cartCount}
+              </span>
+            )}
           </Link>
           <div className="relative">
             <button

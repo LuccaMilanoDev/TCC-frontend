@@ -5,9 +5,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CartItem, getCart, updateQty, removeFromCart } from "@/lib/cart";
 import { useRouter } from "next/navigation";
+import Loading from "@/components/Loading";
 
 export default function CartPage() {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -44,6 +46,7 @@ export default function CartPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      {loading && <Loading text="Finalizando compra..." />}
 
       {/* Gray background to indicate current page */}
       <main className="flex-1 bg-gray-100">
@@ -131,12 +134,17 @@ export default function CartPage() {
                       alert("Seu carrinho está vazio. Adicione itens antes de finalizar a compra.");
                       return;
                     }
-                    router.push("/success");
+                    setLoading(true);
+                    // Opcional: pequeno atraso para garantir renderização do overlay antes da navegação
+                    setTimeout(() => {
+                      router.push("/success");
+                    }, 50);
                   }}
                   aria-label="Finalizar compra"
-                  className="w-full mt-4 bg-black text-white rounded-md py-3 cursor-pointer"
+                  className="w-full mt-4 bg-black text-white rounded-md py-3 cursor-pointer disabled:opacity-60"
+                  disabled={loading}
                 >
-                  Finalizar compra
+                  {loading ? "Processando..." : "Finalizar compra"}
                 </button>
               </div>
             </div>

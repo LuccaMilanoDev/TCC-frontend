@@ -39,6 +39,11 @@ export function getCart(): CartItem[] {
 
 export function setCart(items: CartItem[]) {
   writeCookie(CART_KEY, JSON.stringify(items));
+  // Notify listeners that the cart has been updated
+  if (typeof window !== "undefined") {
+    const count = items.reduce((sum, i) => sum + (i?.qty ?? 0), 0);
+    window.dispatchEvent(new CustomEvent("cart:updated", { detail: { count } }));
+  }
 }
 
 export function addToCart(item: { nome: string; valor: number }, qty = 1) {
@@ -68,4 +73,12 @@ export function removeFromCart(nome: string) {
 
 export function clearCart() {
   setCart([]);
+}
+
+export function getCartCount(): number {
+  try {
+    return getCart().reduce((sum, i) => sum + (i?.qty ?? 0), 0);
+  } catch {
+    return 0;
+  }
 }
