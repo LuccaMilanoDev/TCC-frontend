@@ -6,18 +6,43 @@ import Footer from "@/components/Footer";
 import { CartItem, getCart, updateQty, removeFromCart } from "@/lib/cart";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/Loading";
+import Image from "next/image";
+
+type Buyer = {
+  nome: string;
+  email: string;
+  telefone: string;
+};
+
+type Address = {
+  cep: string;
+  endereco: string;
+  numero: string;
+  complemento: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+};
+
+type RequiredFieldKey =
+  | "buyer.nome"
+  | "address.cep"
+  | "address.endereco"
+  | "address.numero"
+  | "address.cidade"
+  | "address.estado";
 
 export default function CartPage() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   // Buyer and address form state
-  const [buyer, setBuyer] = useState({
+  const [buyer, setBuyer] = useState<Buyer>({
     nome: "",
     email: "",
     telefone: "",
   });
-  const [address, setAddress] = useState({
+  const [address, setAddress] = useState<Address>({
     cep: "",
     endereco: "",
     numero: "",
@@ -29,7 +54,6 @@ export default function CartPage() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [showSummary, setShowSummary] = useState(false);
   const [couponCode, setCouponCode] = useState("");
-  const [bonusCard, setBonusCard] = useState("");
 
   useEffect(() => {
     setItems(getCart());
@@ -40,7 +64,7 @@ export default function CartPage() {
     [items]
   );
 
-  const requiredFields = [
+  const requiredFields: RequiredFieldKey[] = [
     "buyer.nome",
     "address.cep",
     "address.endereco",
@@ -89,13 +113,32 @@ export default function CartPage() {
     setTouched((prev) => ({ ...prev, ...all }));
   };
 
-  const fieldError = (key: string) => {
-    const [scope, prop] = key.split(".");
-    const value = scope === "buyer" ? (buyer as any)[prop] : (address as any)[prop];
-    const required = requiredFields.includes(key);
-    if (!required) return "";
+  const fieldError = (key: RequiredFieldKey) => {
+    let value = "";
+    switch (key) {
+      case "buyer.nome":
+        value = buyer.nome;
+        break;
+      case "address.cep":
+        value = address.cep;
+        break;
+      case "address.endereco":
+        value = address.endereco;
+        break;
+      case "address.numero":
+        value = address.numero;
+        break;
+      case "address.cidade":
+        value = address.cidade;
+        break;
+      case "address.estado":
+        value = address.estado;
+        break;
+      default:
+        value = "";
+    }
     if (!touched[key]) return "";
-    return String(value || "").trim() ? "" : "Campo obrigatório";
+    return value.trim() ? "" : "Campo obrigatório";
   };
 
   return (
@@ -118,11 +161,13 @@ export default function CartPage() {
               <ul className="bg-white border border-gray-200 rounded-lg divide-y">
                 {items.map((i) => (
                   <li key={i.nome} className="p-5 flex items-center gap-4">
-                    <div className="w-16 h-16 rounded bg-gray-100 flex items-center justify-center">
-                      <img 
-                        src={getProductImage(i.nome)} 
+                    <div className="w-16 h-16 rounded bg-gray-100 flex items-center justify-center overflow-hidden">
+                      <Image
+                        src={getProductImage(i.nome)}
                         alt={i.nome}
-                        className="max-w-full max-h-full object-contain"
+                        width={64}
+                        height={64}
+                        className="object-contain max-w-full max-h-full"
                       />
                     </div>
                     <div className="flex-1">

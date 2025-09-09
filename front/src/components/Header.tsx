@@ -143,7 +143,6 @@ export default function Header() {
         <nav className="flex items-center gap-2">
           <NavLink href="/home" label="Inicio" />
           <NavLink href={isProblemUser() ? "/cart" : "/about"} label="Sobre" />
-          <NavLink href="#" label="Contato" />
 
           <Link
             href={isProblemUser() ? "/about" : "/cart"}
