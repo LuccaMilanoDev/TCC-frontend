@@ -1,6 +1,6 @@
 "use client";
 
-import { addToCart } from "@/lib/cart";
+import { addToCart, getCart, removeFromCart } from "@/lib/cart";
 import Image from "next/image";
 import { isProblemUser, isPerformanceUser } from "@/lib/flags";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const problem = isProblemUser();
   const performance = isPerformanceUser();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isInCart, setIsInCart] = useState(false);
 
   // Performance problem: Delay image loading artificially for performance_user
   useEffect(() => {
@@ -27,6 +28,32 @@ export default function ProductCard({ product }: { product: Product }) {
       setImageLoaded(true);
     }
   }, [performance]);
+
+  // Initialize and keep track if product is in cart
+  useEffect(() => {
+    const checkInCart = () => {
+      try {
+        const items = getCart();
+        setIsInCart(items.some((i) => i.nome === product.nome));
+      } catch {
+        setIsInCart(false);
+      }
+    };
+
+    // Initial check
+    checkInCart();
+
+    // Listen to global cart updates
+    const onUpdate = () => checkInCart();
+    if (typeof window !== "undefined") {
+      window.addEventListener("cart:updated", onUpdate as EventListener);
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("cart:updated", onUpdate as EventListener);
+      }
+    };
+  }, [product.nome]);
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 flex flex-col gap-4">
@@ -59,16 +86,25 @@ export default function ProductCard({ product }: { product: Product }) {
           ${product.valor}
         </span>
         <button
-          className="px-4 py-2 bg-black text-white rounded-md text-sm hover:bg-gray-200 hover:text-black transition-colors duration-200 cursor-pointer"
+          className={`px-4 py-2 rounded-md text-sm transition-colors duration-200 cursor-pointer ${
+            isInCart
+              ? "bg-red-600 text-white hover:bg-red-700"
+              : "bg-black text-white hover:bg-gray-200 hover:text-black"
+          }`}
           onClick={() => {
-            addToCart({ nome: product.nome, valor: product.valor });
-            alert("Item adicionado ao carrinho!");
+            if (isInCart) {
+              removeFromCart(product.nome);
+            } else {
+              addToCart({ nome: product.nome, valor: product.valor });
+            }
+            // UI will update via cart:updated event
           }}
         >
-          Adicionar ao carrinho
+          {isInCart ? "Remover do carrinho" : "Adicionar ao carrinho"}
         </button>
       </div>
     </div>
   );
 }
+
 

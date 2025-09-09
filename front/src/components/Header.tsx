@@ -7,7 +7,8 @@ import { isProblemUser, isPerformanceUser } from "@/lib/flags";
 import { getCartCount } from "@/lib/cart";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
-
+import { FaCartShopping, FaUser } from 'react-icons/fa6'; // Fa6 para a versão mais recente
+      
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function Header() {
   const clickCountRef = useRef(0);
   const performance = isPerformanceUser();
   const [cartCount, setCartCount] = useState(0);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setSearch(q);
@@ -44,6 +46,26 @@ export default function Header() {
       window.removeEventListener("cart:updated", onUpdate as EventListener);
     };
   }, []);
+
+  // Close profile menu on outside click or Escape
+  useEffect(() => {
+    if (!showMenu) return;
+    const onDocMouseDown = (e: MouseEvent) => {
+      const target = e.target as Node | null;
+      if (menuRef.current && target && !menuRef.current.contains(target)) {
+        setShowMenu(false);
+      }
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowMenu(false);
+    };
+    document.addEventListener("mousedown", onDocMouseDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onDocMouseDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [showMenu]);
 
   const makeUrl = useMemo(() => {
     return (nextQ: string) => {
@@ -100,7 +122,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
         <div className="flex items-center gap-3">
           <Link href="/home" className="flex items-center gap-2">
-            <Image src="/Logo (3).png" alt="Logo" width={42} height={42} />
+            <Image src="/Logo (3).png" alt="Logo" width={42} height={42} style={{ height: "auto" }} />
           </Link>
         </div>
 
@@ -126,11 +148,11 @@ export default function Header() {
           <Link
             href={isProblemUser() ? "/about" : "/cart"}
             aria-label="Cart"
-            className={`relative ml-2 p-2 rounded transition-colors ${
+            className={`relative ml-2 p-2 rounded transition-colors text-black ${
               pathname.startsWith("/cart") ? "bg-gray-300" : "hover:bg-gray-300"
             }`}
           >
-            🛒
+            <FaCartShopping />
             {cartCount > 0 && (
               <span
                 aria-label="Itens no carrinho"
@@ -140,13 +162,13 @@ export default function Header() {
               </span>
             )}
           </Link>
-          <div className="relative">
+          <div className="relative" ref={menuRef}>
             <button
               aria-label="Profile"
-              className="p-2 rounded hover:bg-gray-300 cursor-pointer"
+              className="p-2 rounded hover:bg-gray-300 cursor-pointer text-black"
               onClick={() => setShowMenu((v) => !v)}
             >
-              👤
+              <FaUser />
             </button>
             {showMenu && (
               <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-md py-2 z-50">
