@@ -97,6 +97,7 @@ export default function LoginPage() {
                 <li><code className="px-1 bg-gray-100 rounded">problem_user</code></li>
                 <li><code className="px-1 bg-gray-100 rounded">performance_user</code></li>
                 <li><code className="px-1 bg-gray-100 rounded">locked_out_user</code></li>
+                <li><code className="px-1 bg-gray-100 rounded">visual_user</code></li>
               </ul>
             </div>
             <div className="bg-white border border-gray-300 rounded-md p-4">

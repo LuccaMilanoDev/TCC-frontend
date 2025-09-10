@@ -35,3 +35,21 @@ export function setPerformanceUser(enabled: boolean) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem("performanceUser", enabled ? "1" : "0");
 }
+
+// visual_user: triggers intentional visual glitches
+export function isVisualUser(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("vis") === "1") return true;
+    const ls = window.localStorage.getItem("visualUser");
+    return ls === "1" || ls === "true";
+  } catch {
+    return false;
+  }
+}
+
+export function setVisualUser(enabled: boolean) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem("visualUser", enabled ? "1" : "0");
+}

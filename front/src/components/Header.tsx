@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { isProblemUser, isPerformanceUser } from "@/lib/flags";
+import { isProblemUser, isPerformanceUser, isVisualUser } from "@/lib/flags";
 import { getCartCount } from "@/lib/cart";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -21,6 +21,7 @@ export default function Header() {
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const clickCountRef = useRef(0);
   const performance = isPerformanceUser();
+  const visual = isVisualUser();
   const [cartCount, setCartCount] = useState(0);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -118,11 +119,11 @@ export default function Header() {
   );
 
   return (
-    <header className="w-full bg-white/90 backdrop-blur border-b border-gray-200">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
-        <div className="flex items-center gap-3">
+    <header className={`w-full bg-white/90 backdrop-blur border-b ${visual ? "border-dashed border-red-300" : "border-gray-200"}`}>
+      <div className={`max-w-7xl mx-auto flex ${visual ? "items-start" : "items-center"} justify-between px-6 py-3 ${visual ? "gap-6" : ""}`}>
+        <div className={`flex items-center gap-3 ${visual ? "-mt-1" : ""}`}>
           <Link href="/home" className="flex items-center gap-2">
-            <Image src="/Logo (3).png" alt="Logo" width={42} height={42} style={{ height: "auto" }} />
+            <Image src="/Logo (3).png" alt="Logo" width={42} height={42} style={{ height: "auto" }} className={`${visual ? "rotate-6" : ""}`} />
           </Link>
         </div>
 
@@ -140,7 +141,7 @@ export default function Header() {
           </div>
         </div>
 
-        <nav className="flex items-center gap-2">
+        <nav className={`flex ${visual ? "items-end gap-6" : "items-center gap-2"}`}>
           <NavLink href="/home" label="Inicio" />
           <NavLink href={isProblemUser() ? "/cart" : "/about"} label="Sobre" />
 
@@ -155,7 +156,7 @@ export default function Header() {
             {cartCount > 0 && (
               <span
                 aria-label="Itens no carrinho"
-                className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-red-600 text-white text-[10px] leading-[18px] text-center font-semibold"
+                className={`absolute -top-1 ${visual ? "left-0" : "-right-1"} min-w-[18px] h-[18px] px-1 rounded-full bg-red-600 text-white text-[10px] leading-[18px] text-center font-semibold`}
               >
                 {cartCount}
               </span>
