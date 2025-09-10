@@ -27,6 +27,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(async (username: string, password: string) => {
     if (password === "password") {
+      // locked_out_user: should not authenticate and must return a clear error
+      if (username === "locked_out_user") {
+        return { ok: false as const, error: "Desculpe esse usuario foi bloqueado 🙂" };
+      }
       if (username === "standard_user") {
         setIsAuthenticated(true);
         try { localStorage.setItem(AUTH_KEY, "true"); } catch {}
