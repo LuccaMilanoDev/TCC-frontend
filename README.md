@@ -86,3 +86,7 @@ Quando a flag de visual user está ativa, são introduzidas falhas visuais propo
   - Origem: `src/components/ProductCard.tsx` (classes e ordem condicionais por `isVisualUser()`).
 - Grid com espaçamentos irregulares, skew e itens desalinhados verticalmente.
   - Origem: `src/components/ProductGrid.tsx` (gap assimétrico, `skew-y-1` e deslocamentos por índice quando `isVisualUser()`).
+
+## auth_expired_user — usuario com expiracao de sessao
+
+Quando este usuario faz login temos um timer de 15 segundos para expirar a sessao.
