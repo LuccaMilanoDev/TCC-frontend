@@ -96,7 +96,7 @@ export default function ProductCard({ product }: { product: Product }) {
             if (isInCart) {
               removeFromCart(product.nome);
             } else {
-              addToCart({ nome: product.nome, valor: product.valor });
+              addToCart({ nome: product.nome, valor: product.valor, imagem: product.imagem });
             }
             // UI will update via cart:updated event
           }}

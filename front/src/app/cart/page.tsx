@@ -163,7 +163,7 @@ export default function CartPage() {
                   <li key={i.nome} className="p-5 flex items-center gap-4">
                     <div className="w-16 h-16 rounded bg-gray-100 flex items-center justify-center overflow-hidden">
                       <Image
-                        src={getProductImage(i.nome)}
+                        src={i.imagem ?? getProductImage(i.nome)}
                         alt={i.nome}
                         width={64}
                         height={64}
@@ -426,6 +426,13 @@ function getProductImage(productName: string): string {
     'Mochila': '/mochila.png',
     'Relógio': '/relogio.png',
     'iPhone': '/iphone.png',
+    'Sandalia': '/Sandalia.png',
+    'Bolsa': '/Bolsa.png',
+    'headset': '/headset.png',
+    'monitor': '/monitor.png',
+    'Tenis': '/Tenis.png',
+    'Chaveiro': '/Chaveiro.png',
+    'Mala': '/Mala.png',
   };
   
   // Find matching product (case insensitive partial match)

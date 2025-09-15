@@ -23,5 +23,40 @@
     "nome": "Casaco",
     "valor": 150,
     "imagem": "/casaco.png"
+  },
+  {
+    "nome": "Sandalia",
+    "valor": 250,
+    "imagem": "/sandalia.png"
+  },
+  {
+    "nome": "Bolsa",
+    "valor": 600,
+    "imagem": "/bolsa.png"
+  },
+  {
+    "nome": "headset",
+    "valor": 750,
+    "imagem": "/headset.png"
+  },
+  {
+    "nome": "monitor",
+    "valor": 300,
+    "imagem": "/monitor.png"
+  },
+  {
+    "nome": "Tenis",
+    "valor": 120,
+    "imagem": "/Tenis.png"
+  },
+  {
+    "nome": "Chaveiro",
+    "valor": 20,
+    "imagem": "/Chaveiro.png"
+  },
+  {
+    "nome": "Mala",
+    "valor": 100,
+    "imagem": "/Mala.png"
   }
 ]

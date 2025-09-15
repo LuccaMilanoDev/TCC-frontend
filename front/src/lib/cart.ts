@@ -6,6 +6,7 @@ export type CartItem = {
   nome: string;
   valor: number;
   qty: number;
+  imagem?: string;
 };
 
 function readCookie(name: string): string | null {
@@ -46,13 +47,17 @@ export function setCart(items: CartItem[]) {
   }
 }
 
-export function addToCart(item: { nome: string; valor: number }, qty = 1) {
+export function addToCart(item: { nome: string; valor: number; imagem?: string }, qty = 1) {
   const cart = getCart();
   const idx = cart.findIndex((i) => i.nome === item.nome);
   if (idx >= 0) {
     cart[idx].qty += qty;
+    // Preserve existing image, but if it was missing and now provided, set it
+    if (!cart[idx].imagem && item.imagem) {
+      cart[idx].imagem = item.imagem;
+    }
   } else {
-    cart.push({ nome: item.nome, valor: item.valor, qty });
+    cart.push({ nome: item.nome, valor: item.valor, qty, imagem: item.imagem });
   }
   setCart(cart);
 }
