@@ -47,16 +47,16 @@
   {
     "nome": "Tenis",
     "valor": 120,
-    "imagem": "/Tenis.png"
+    "imagem": "/tenis.png"
   },
   {
     "nome": "Chaveiro",
     "valor": 20,
-    "imagem": "/Chaveiro.png"
+    "imagem": "/chaveiro.png"
   },
   {
     "nome": "Mala",
     "valor": 100,
-    "imagem": "/Mala.png"
+    "imagem": "/mala.png"
   }
 ]

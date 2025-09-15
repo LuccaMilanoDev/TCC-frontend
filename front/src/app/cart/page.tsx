@@ -426,13 +426,13 @@ function getProductImage(productName: string): string {
     'Mochila': '/mochila.png',
     'Relógio': '/relogio.png',
     'iPhone': '/iphone.png',
-    'Sandalia': '/Sandalia.png',
-    'Bolsa': '/Bolsa.png',
+    'Sandalia': '/sandalia.png',
+    'Bolsa': '/bolsa.png',
     'headset': '/headset.png',
     'monitor': '/monitor.png',
-    'Tenis': '/Tenis.png',
-    'Chaveiro': '/Chaveiro.png',
-    'Mala': '/Mala.png',
+    'Tenis': '/tenis.png',
+    'Chaveiro': '/chaveiro.png',
+    'Mala': '/mala.png',
   };
   
   // Find matching product (case insensitive partial match)
